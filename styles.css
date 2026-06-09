@@ -240,7 +240,7 @@ strong { color: var(--text); font-weight: 600; }
 }
 .contact-link:hover { transform: translateY(-4px); border-color: var(--accent); }
 .contact-link strong { font-size: 0.95rem; }
-.contact-link span:last-child { color: var(--text-dim); line-height: 1.4; }
+.contact-link span:last-child { color: var(--text-dim); line-height: 1.4; min-width: 0; overflow-wrap: anywhere; }
 .contact-icon {
   flex-shrink: 0; width: 44px; height: 44px; border-radius: 12px; display: grid; place-items: center;
   background: var(--surface-2); border: 1px solid var(--border); font-size: 1rem; font-weight: 700;
