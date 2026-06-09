@@ -1,16 +1,73 @@
 // ===== Year =====
 document.getElementById("year").textContent = new Date().getFullYear();
 
-// ===== Theme toggle (persisted) =====
+// ===== Theme picker (persisted) =====
+// To add a theme: add a [data-theme="id"] block in styles.css,
+// then add an entry here. That's it.
+const THEMES = [
+  { id: "dark", label: "AI Generated (dark)" },
+  { id: "light", label: "AI Generated (light)" },
+  { id: "game", label: "Game" },
+  { id: "terminal", label: "Terminal" },
+];
+const DEFAULT_THEME = "dark";
+
 const root = document.documentElement;
-const toggle = document.getElementById("themeToggle");
-const stored = localStorage.getItem("theme");
-if (stored) root.setAttribute("data-theme", stored);
-toggle.addEventListener("click", () => {
-  const next = root.getAttribute("data-theme") === "light" ? "dark" : "light";
-  root.setAttribute("data-theme", next);
-  localStorage.setItem("theme", next);
+const themeBtn = document.getElementById("themeBtn");
+const themeBtnLabel = document.getElementById("themeBtnLabel");
+const themeMenu = document.getElementById("themeMenu");
+
+function applyTheme(id) {
+  const theme = THEMES.find((t) => t.id === id) || THEMES[0];
+  root.setAttribute("data-theme", theme.id);
+  localStorage.setItem("theme", theme.id);
+  themeBtnLabel.textContent = theme.label;
+  themeMenu.querySelectorAll("li").forEach((li) => {
+    li.setAttribute("aria-selected", li.dataset.theme === theme.id ? "true" : "false");
+  });
+}
+
+// Build the menu from THEMES
+THEMES.forEach((t) => {
+  const li = document.createElement("li");
+  li.dataset.theme = t.id;
+  li.setAttribute("role", "option");
+  // swatch carries the theme's own colors via a temporary data-theme scope
+  li.innerHTML = `<span class="swatch" data-theme="${t.id}"></span><span>${t.label}</span>`;
+  li.addEventListener("click", () => {
+    applyTheme(t.id);
+    closeMenu();
+  });
+  themeMenu.appendChild(li);
 });
+
+// Give each swatch its theme's accent gradient
+themeMenu.querySelectorAll(".swatch").forEach((sw) => {
+  sw.style.background =
+    getComputedStyle(sw).getPropertyValue("--accent-grad") ||
+    getComputedStyle(sw).getPropertyValue("--accent");
+});
+
+function openMenu() {
+  themeMenu.classList.add("open");
+  themeBtn.setAttribute("aria-expanded", "true");
+}
+function closeMenu() {
+  themeMenu.classList.remove("open");
+  themeBtn.setAttribute("aria-expanded", "false");
+}
+themeBtn.addEventListener("click", (e) => {
+  e.stopPropagation();
+  themeMenu.classList.contains("open") ? closeMenu() : openMenu();
+});
+document.addEventListener("click", (e) => {
+  if (!document.getElementById("themePicker").contains(e.target)) closeMenu();
+});
+document.addEventListener("keydown", (e) => {
+  if (e.key === "Escape") closeMenu();
+});
+
+applyTheme(localStorage.getItem("theme") || DEFAULT_THEME);
 
 // ===== Nav state + scroll progress =====
 const nav = document.getElementById("nav");

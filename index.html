@@ -14,9 +14,9 @@
 
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&family=Press+Start+2P&family=VT323&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="styles.css" />
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>" />
+  <link rel="icon" type="image/svg+xml" href="favicon.svg" />
 </head>
 <body>
   <!-- Progress bar -->
@@ -32,10 +32,14 @@
       <a href="#education">Education</a>
       <a href="#contact">Contact</a>
     </nav>
-    <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
-      <span class="theme-icon-sun">☀</span>
-      <span class="theme-icon-moon">☾</span>
-    </button>
+    <div class="theme-picker" id="themePicker">
+      <button class="theme-btn" id="themeBtn" aria-haspopup="listbox" aria-expanded="false" aria-label="Select theme">
+        <span class="swatch"></span>
+        <span id="themeBtnLabel">Theme</span>
+        <span class="chev">▾</span>
+      </button>
+      <ul class="theme-menu" id="themeMenu" role="listbox" aria-label="Theme"></ul>
+    </div>
   </header>
 
   <main id="top">
