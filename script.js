@@ -4,13 +4,24 @@ document.getElementById("year").textContent = new Date().getFullYear();
 // ===== Theme picker (persisted) =====
 // To add a theme: add a [data-theme="id"] block in styles.css,
 // then add an entry here. That's it.
+//   landing: true  -> eligible for the random theme shown to first-time
+//                     visitors. Leave it off (the "AI Generated" themes)
+//                     to make a theme selectable only by explicit click.
 const THEMES = [
   { id: "dark", label: "AI Generated (dark)" },
   { id: "light", label: "AI Generated (light)" },
-  { id: "game", label: "Game" },
-  { id: "terminal", label: "Terminal" },
+  { id: "game", label: "Game", landing: true },
+  { id: "terminal", label: "Terminal", landing: true },
 ];
-const DEFAULT_THEME = "dark";
+// Fallback if nothing in the landing pool (kept as Terminal by request).
+const DEFAULT_THEME = "terminal";
+
+// Pick a random landing theme; never auto-selects non-landing themes.
+function pickLandingTheme() {
+  const pool = THEMES.filter((t) => t.landing);
+  if (!pool.length) return DEFAULT_THEME;
+  return pool[Math.floor(Math.random() * pool.length)].id;
+}
 
 const root = document.documentElement;
 const themeBtn = document.getElementById("themeBtn");
@@ -67,7 +78,9 @@ document.addEventListener("keydown", (e) => {
   if (e.key === "Escape") closeMenu();
 });
 
-applyTheme(localStorage.getItem("theme") || DEFAULT_THEME);
+// Returning visitors keep whatever they last chose (even an AI Generated
+// one they clicked); first-time visitors get a random landing theme.
+applyTheme(localStorage.getItem("theme") || pickLandingTheme());
 
 // ===== Nav state + scroll progress =====
 const nav = document.getElementById("nav");
